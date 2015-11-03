@@ -14,9 +14,9 @@ module.exports = {
             if (SuperType) {
                 if ((typeof SuperType === 'string') && errors[SuperType]) {
                     SuperConstructor = errors[SuperType].getConstructor();
-                } else if ((typeof SuperType === 'object') && SuperType.getConstructor) {
+                } else if ((typeof SuperType === 'object') && (typeof SuperType.getConstructor === 'function')) {
                     SuperConstructor = SuperType.getConstructor();
-                } else if ((typeof SuperType === 'function') && SuperType.prototype instanceof CustomErrorConstructor) {
+                } else if ((typeof SuperType === 'function') && (SuperType.prototype instanceof CustomErrorConstructor)) {
                     SuperConstructor = SuperType
                 }
             }
@@ -25,7 +25,7 @@ module.exports = {
                 getConstructor  : function() {
                     return ErrorConstructor;
                 },
-                generate        : function(params) { // object literal or JS error
+                generate        : function(params) { // string or object literal or JS error
                     var e = new ErrorConstructor(params.message || defaultMessage, params.cause || params);
                     e.code = params.code;
                     return e;
