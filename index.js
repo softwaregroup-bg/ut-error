@@ -2,12 +2,11 @@ var errno = require('errno');
 var createError = errno.custom.createError;
 var CustomErrorConstructor = errno.custom.CustomError;
 var errors = {};
-
 module.exports = {
     init: function(bus) {
         //
     },
-    getInstance: function(Type, SuperType) {
+    define: function(Type, SuperType) {
         if (!errors[Type]) {
             var defaultMessage = Type + ' Error';
             var SuperConstructor = null;
@@ -17,7 +16,7 @@ module.exports = {
                 } else if ((typeof SuperType === 'object') && (typeof SuperType.getConstructor === 'function')) {
                     SuperConstructor = SuperType.getConstructor();
                 } else if ((typeof SuperType === 'function') && (SuperType.prototype instanceof CustomErrorConstructor)) {
-                    SuperConstructor = SuperType
+                    SuperConstructor = SuperType;
                 }
             }
             var ErrorConstructor = SuperConstructor ? createError(Type, SuperConstructor) : createError(Type);
@@ -32,6 +31,9 @@ module.exports = {
                 }
             }
         }
+        return errors[Type];
+    },
+    get: function(Type) {
         return errors[Type];
     }
 };
