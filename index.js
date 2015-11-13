@@ -1,36 +1,85 @@
+var _undefined;
+var isProto = Math.random();
+
 function inherit(ctor, superCtor) {
-    ctor.prototype = new superCtor(null); //hinting that a prototype object but not a regular instance is being constructed
+    ctor.prototype = new superCtor(isProto); //hinting that a prototype object but not a regular instance is being constructed
     ctor.superConstructor = superCtor;
     ctor.prototype.constructor = ctor;
 }
 
-function UTError(config) {
-    if (config === null) { //knowing that a prototype object but not a regular instance is being constructed
+function UTError(x) {
+    if (x === isProto) { //knowing that a prototype object but not a regular instance is being constructed
         return;
+    }  else if(!(this instanceof UTError)) {
+        return new UTError(x);
     }
     Error.call(this);
     Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
-    for (var prop in config) {
-        if (config.hasOwnProperty(prop)) {
-            this[prop] = config[prop]
+    var type = this.getType();
+    var props = {
+        message : type + ' Error',
+        cause   : type + ' Error',
+        params  : {}
+    };
+    if (x) {
+        if (typeof x === 'string') {
+            props.message = x;
+            props.cause   = x;
+        } else if (typeof x === 'object') {
+            if (x instanceof Error) {
+                props.message = x.message;
+                props.cause   = x;
+            } else {
+                for (var prop in x) {
+                    if (x.hasOwnProperty(prop)) {
+                        props[prop] = x[prop];
+                    }
+                }
+            }
         }
     }
+    props.type = type;
+    if(props.params) {
+        props.message = interpolate(props.message, props.params);
+    }
+    var prop;
+    for (prop in props) {
+        if(props.hasOwnProperty(prop)) {
+            this[prop] = props[prop];
+        }
+    }
+    props = prop = type = x = _undefined; // cleanup
 };
 
 inherit(UTError, Error);
 
-function createErrorType(type, superType) {
-    function CustomUTError(config) {
-        if (config === null) { //knowing that a prototype object but not a regular instance is being constructed
+UTError.prototype.getType = function() {
+    return 'UTError';
+}
+
+UTError.prototype.getConstructor = function(){
+    return this.constructor;
+};
+
+UTError.prototype.getSuperConstructor = function(){
+    return this.constructor.superConstructor;
+};
+
+function createErrorConstructor(type, superCtor) {
+    function CustomUTError(x) {
+        if (x === isProto) { //knowing that a prototype object but not a regular instance is being constructed
             return;
-        } else if (!config.type) { // should happen only once (right before start inheriting from super classes)
-            config.type    = type;
-            config.name    = type;
-            config.message = interpolate(config.message, config.params);
+        } else if(!(this instanceof CustomUTError)) {
+            return new CustomUTError(x);
         }
-        superType.call(this, config);
+        superCtor.call(this, x);
     }
-    inherit(CustomUTError, superType);
+    inherit(CustomUTError, superCtor);
+
+    CustomUTError.prototype.getType = function() {
+        return type;
+    };
+
     return CustomUTError;
 }
 
@@ -44,66 +93,33 @@ function interpolate(message, params) {
     );
 }
 
-var errors = {};
+var errorConstructors = {};
 
 module.exports = {
     init: function(bus) {
 
     },
     define: function(type, superType) {
-        if (!errors[type]) {
+        if (!errorConstructors[type]) {
             var superConstructor = null;
             if (superType) {
-                if ((typeof superType === 'string') && errors[superType]) {
-                    superConstructor = errors[superType].getConstructor();
-                } else if ((typeof superType === 'object') && (typeof superType.getConstructor === 'function')) {
-                    superConstructor = superType.getConstructor();
+                if ((typeof superType === 'string') && errorConstructors[superType]) {
+                    superConstructor = errorConstructors[superType];
                 } else if ((typeof superType === 'function') && (superType.prototype instanceof UTError)) {
                     superConstructor = superType;
+                } else if ((typeof superType === 'object') && (typeof superType.getConstructor === 'function')) {
+                    superConstructor = superType.getConstructor();
                 } else {
                     superConstructor = UTError;
                 }
             } else {
                 superConstructor = UTError;
             }
-            var errorConstructor = createErrorType(type, superConstructor);
-            errors[type] = {
-                getConstructor  : function() {
-                    return errorConstructor;
-                },
-                getSuperConstructor  : function() {
-                    return superConstructor;
-                },
-                generate        : function(x) { // undefined or string or object literal or JS error
-                    var config  = {
-                        message : type + ' Error',
-                        cause   : type + ' Error',
-                        params  : {}
-                    };
-                    if (x) {
-                        if (typeof x === 'string') {
-                            config.message = x;
-                            config.cause   = x;
-                        } else if (typeof x === 'object') {
-                            if (x instanceof Error) {
-                                config.message = x.message;
-                                config.cause   = x;
-                            } else {
-                                for (var prop in x) {
-                                    if (x.hasOwnProperty(prop)) {
-                                        config[prop] = x[prop];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    return new errorConstructor(config);
-                }
-            }
+            errorConstructors[type] = createErrorConstructor(type, superConstructor);
         }
-        return errors[type];
+        return errorConstructors[type];
     },
     get: function(type) {
-        return type ? errors[type] : errors;
+        return type ? errorConstructors[type] : errorConstructors;
     }
 };
