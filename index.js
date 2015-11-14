@@ -18,8 +18,7 @@ function UTError(x) {
     var type = this.getType();
     var props = {
         message : type + ' Error',
-        cause   : type + ' Error',
-        params  : {}
+        cause   : type + ' Error'
     };
     if (x) {
         if (typeof x === 'string') {
@@ -37,10 +36,13 @@ function UTError(x) {
                 }
             }
         }
+
     }
     props.type = type;
+    // TODO: translate props.message and set as props.print here
+    props.print = props.message; // set just default for now
     if(props.params) {
-        props.message = interpolate(props.message, props.params);
+        props.print = interpolate(props.print, props.params);
     }
     var prop;
     for (prop in props) {
@@ -54,16 +56,8 @@ function UTError(x) {
 inherit(UTError, Error);
 
 UTError.prototype.getType = function() {
-    return 'UTError';
+    return this.constructor.name;
 }
-
-UTError.prototype.getConstructor = function(){
-    return this.constructor;
-};
-
-UTError.prototype.getSuperConstructor = function(){
-    return this.constructor.superConstructor;
-};
 
 function createErrorConstructor(type, superCtor) {
     function CustomUTError(x) {
@@ -107,8 +101,6 @@ module.exports = {
                     superConstructor = errorConstructors[superType];
                 } else if ((typeof superType === 'function') && (superType.prototype instanceof UTError)) {
                     superConstructor = superType;
-                } else if ((typeof superType === 'object') && (typeof superType.getConstructor === 'function')) {
-                    superConstructor = superType.getConstructor();
                 } else {
                     superConstructor = UTError;
                 }
