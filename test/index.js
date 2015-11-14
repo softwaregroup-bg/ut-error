@@ -30,29 +30,28 @@ var errorInstances = {
     }
 }
 
-// inspect properties
+console.log('\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\nProperties Inspection\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\n');
 for (var errorType in errorInstances) {
     if (errorInstances.hasOwnProperty(errorType)) {
         for (var err in errorInstances[errorType]) {
             if (errorInstances[errorType].hasOwnProperty(err)) {
-                console.log('\nError Type: ', errorType);
-                console.log('Instance Name: ', err);
-                console.log('Error Message: ', errorInstances[errorType][err].message);
+            	console.log('\n--------------------------------------------------\n');
+            	console.log('errorInstances.' + errorType + '.' + err);
+            	console.log('\n--------------------------------------------------\n');
                 var props = {};
                 for (var prop in errorInstances[errorType][err]) {
                     if (errorInstances[errorType][err].hasOwnProperty(prop)) {
                         props[prop] = errorInstances[errorType][err][prop];
                     }
                 }
-                console.log('Error Properties: ', JSON.stringify(props, null, 4), '\n');
-                console.log('Error stack: ', errorInstances[errorType][err].stack);
-                console.log('\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n');
+                console.log('\nProperties:\n\n' + JSON.stringify(props, null, 4), '\n');
+                console.log('\nStack:\n\n' + errorInstances[errorType][err].stack);
             }
         }
     }
 }
 
-console.log('\n\nSuccessfull Inheritance Tests \n\n');
+console.log('\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\nTruthful Inheritance Tests\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\n');
 
 for(var errorType in errorInstances) {
     if (errorInstances.hasOwnProperty(errorType)) {
@@ -61,7 +60,7 @@ for(var errorType in errorInstances) {
                 console.log(
                     (errorInstances[errorType][err] instanceof Error) +
                     ' <- '+
-                    'errorInstances.' + errorType + '.' + err + ' instaneof Error'
+                    'errorInstances.' + errorType + '.' + err + ' instanceof Error'
                 );
                 for (var errType in errorTypes) {
                 	if (errorTypes.hasOwnProperty(errType)) {
@@ -69,7 +68,7 @@ for(var errorType in errorInstances) {
                 			console.log(
 				                (errorInstances[errorType][err] instanceof errorTypes[errType]) +
 				                ' <- '+
-				                'errorInstances.' + errorType + '.' + err + ' instaneof errorTypes.' + errType
+				                'errorInstances.' + errorType + '.' + err + ' instanceof errorTypes.' + errType
 				            );
                 		}
                 	}
@@ -80,7 +79,7 @@ for(var errorType in errorInstances) {
 }
 
 
-console.log('\n\nUnsuccessfull Inheritance Tests \n\n');
+console.log('\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\nUntruthful Inheritance Tests\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\n');
 
 for(var errorType in errorInstances) {
     if (errorInstances.hasOwnProperty(errorType)) {
@@ -92,7 +91,7 @@ for(var errorType in errorInstances) {
                 			console.log(
 				                (errorInstances[errorType][err] instanceof errorTypes[errType]) +
 				                ' <- '+
-				                'errorInstances.' + errorType + '.' + err + ' instaneof errorTypes.' + errType
+				                'errorInstances.' + errorType + '.' + err + ' instanceof errorTypes.' + errType
 				            );
                 		}
                 	}
