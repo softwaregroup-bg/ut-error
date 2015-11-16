@@ -1,9 +1,9 @@
 var isProto = Math.random();
 
-function inherit(ctor, SuperCtor) {
-    ctor.prototype = new SuperCtor(isProto); //hinting that a prototype object but not a regular instance is being constructed
-    ctor.superConstructor = SuperCtor;
-    ctor.prototype.constructor = ctor;
+function inherit(Ctor, SuperCtor) {
+    Ctor.prototype = new SuperCtor(isProto); //hinting that a prototype object but not a regular instance is being constructed
+    Ctor.superConstructor = SuperCtor;
+    Ctor.prototype.constructor = Ctor;
 }
 
 function UTError(x) {
@@ -13,14 +13,12 @@ function UTError(x) {
     Error.call(this);
     Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
     var prop;
-    var type = this.getType();
+    var name = this.getName();
     var props = {
-        message : type + ' Error',
-        cause   : type + ' Error'
+        message : name + ' Error'
     };
     if (typeof x === 'string') {
         props.message = x;
-        props.cause   = x;
     } else if (typeof x === 'object') {
         if (x instanceof Error) {
             props.message = x.message;
@@ -33,19 +31,16 @@ function UTError(x) {
             }
         }
     }
-    props.type = type;
     for (prop in props) {
         if (props.hasOwnProperty(prop)) {
             this[prop] = props[prop];
         }
     }
+    this.name = name;
+    this.type = this.getType();
 }
 
 inherit(UTError, Error);
-
-UTError.prototype.getType = function() {
-    return this.constructor.name;
-};
 
 var interpolationRegex = /{([^{}]*)}/g;
 
@@ -62,19 +57,24 @@ UTError.prototype.interpolate = function(message) {
     return this.print;
 };
 
-function createErrorConstructor(type, superCtor) {
+function createErrorConstructor(name, SuperCtor) {
+    var type = SuperCtor === UTError ? name : SuperCtor.prototype.getType() + '.' + name;
     function CustomUTError(x) {
         if (x === isProto) { //knowing that a prototype object but not a regular instance is being constructed
             return;
         } else if (!(this instanceof CustomUTError)) {
             return new CustomUTError(x);
         }
-        superCtor.call(this, x);
+        SuperCtor.call(this, x);
     }
-    inherit(CustomUTError, superCtor);
+    inherit(CustomUTError, SuperCtor);
 
     CustomUTError.prototype.getType = function() {
         return type;
+    };
+
+    CustomUTError.prototype.getName = function() {
+        return name;
     };
 
     return CustomUTError;
@@ -86,19 +86,19 @@ module.exports = {
     init: function(bus) {
 
     },
-    define: function(type, superType) {
-        if (!errorConstructors[type]) {
-            var superConstructor = UTError;
+    define: function(name, superType) {
+        if (!errorConstructors[name]) {
+            var SuperCtor = UTError;
             if ((typeof superType === 'string') && errorConstructors[superType]) {
-                superConstructor = errorConstructors[superType];
+                SuperCtor = errorConstructors[superType];
             } else if ((typeof superType === 'function') && (superType.prototype instanceof UTError)) {
-                superConstructor = superType;
+                SuperCtor = superType;
             }
-            errorConstructors[type] = createErrorConstructor(type, superConstructor);
+            errorConstructors[name] = createErrorConstructor(name, SuperCtor);
         }
-        return errorConstructors[type];
+        return errorConstructors[name];
     },
-    get: function(type) {
-        return type ? errorConstructors[type] : errorConstructors;
+    get: function(name) {
+        return name ? errorConstructors[name] : errorConstructors;
     }
 };
