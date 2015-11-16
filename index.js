@@ -10,8 +10,6 @@ function inherit(ctor, superCtor) {
 function UTError(x) {
     if (x === isProto) { //knowing that a prototype object but not a regular instance is being constructed
         return;
-    }  else if (!(this instanceof UTError)) {
-        return new UTError(x);
     }
     Error.call(this);
     Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
