@@ -1,9 +1,13 @@
 var utError = require('ut-error');
 
+var errorType1 = utError.define('ErrorType1');
+var errorType2 = utError.define('ErrorType2', errorType1);
+var errorType3 = utError.define('ErrorType3', errorType2);
+
 var errorTypes = {
-    errorType1: utError.define('ErrorType1'),
-    errorType2: utError.define('ErrorType2', 'ErrorType1'),
-    errorType3: utError.define('ErrorType3', 'ErrorType2')
+    errorType1: errorType1,
+    errorType2: errorType2,
+    errorType3: errorType3
 };
 
 var jsError = new Error('root error');
