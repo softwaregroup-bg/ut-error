@@ -18,23 +18,20 @@ function UTError(x) {
         message : type + ' Error',
         cause   : type + ' Error'
     };
-    if (x) {
-        if (typeof x === 'string') {
-            props.message = x;
+    if (typeof x === 'string') {
+        props.message = x;
+        props.cause   = x;
+    } else if (typeof x === 'object') {
+        if (x instanceof Error) {
+            props.message = x.message;
             props.cause   = x;
-        } else if (typeof x === 'object') {
-            if (x instanceof Error) {
-                props.message = x.message;
-                props.cause   = x;
-            } else {
-                for (var prop in x) {
-                    if (x.hasOwnProperty(prop)) {
-                        props[prop] = x[prop];
-                    }
+        } else {
+            for (var prop in x) {
+                if (x.hasOwnProperty(prop)) {
+                    props[prop] = x[prop];
                 }
             }
         }
-
     }
     props.type = type;
     // TODO: translate props.message and set as props.print here
