@@ -41,7 +41,6 @@ function UTError(x) {
 inherit(UTError, Error);
 
 var interpolationRegex = /{([^{}]*)}/g;
-
 function interpolate(message, params) {
     return message.replace(interpolationRegex,
         function(placeHolder, label) {
