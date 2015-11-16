@@ -10,7 +10,7 @@ function inherit(ctor, superCtor) {
 function UTError(x) {
     if (x === isProto) { //knowing that a prototype object but not a regular instance is being constructed
         return;
-    }  else if(!(this instanceof UTError)) {
+    }  else if (!(this instanceof UTError)) {
         return new UTError(x);
     }
     Error.call(this);
@@ -41,16 +41,16 @@ function UTError(x) {
     props.type = type;
     // TODO: translate props.message and set as props.print here
     props.print = props.message; // set just default for now
-    if(props.params) {
+    if (props.params) {
         props.print = interpolate(props.print, props.params);
     }
     var prop;
     for (prop in props) {
-        if(props.hasOwnProperty(prop)) {
+        if (props.hasOwnProperty(prop)) {
             this[prop] = props[prop];
         }
     }
-    props = prop = type = x = _undefined; // cleanup
+    props = prop = type = _undefined; // cleanup
 };
 
 inherit(UTError, Error);
@@ -63,7 +63,7 @@ function createErrorConstructor(type, superCtor) {
     function CustomUTError(x) {
         if (x === isProto) { //knowing that a prototype object but not a regular instance is being constructed
             return;
-        } else if(!(this instanceof CustomUTError)) {
+        } else if (!(this instanceof CustomUTError)) {
             return new CustomUTError(x);
         }
         superCtor.call(this, x);
@@ -95,19 +95,14 @@ module.exports = {
     },
     define: function(type, superType) {
         if (!errorConstructors[type]) {
-            var superConstructor = null;
-            if (superType) {
-                if ((typeof superType === 'string') && errorConstructors[superType]) {
-                    superConstructor = errorConstructors[superType];
-                } else if ((typeof superType === 'function') && (superType.prototype instanceof UTError)) {
-                    superConstructor = superType;
-                } else {
-                    superConstructor = UTError;
-                }
-            } else {
-                superConstructor = UTError;
+            var superConstructor = UTError;
+            if ((typeof superType === 'string') && errorConstructors[superType]) {
+                superConstructor = errorConstructors[superType];
+            } else if ((typeof superType === 'function') && (superType.prototype instanceof UTError)) {
+                superConstructor = superType;
             }
             errorConstructors[type] = createErrorConstructor(type, superConstructor);
+            superConstructor = _undefined; // cleanup
         }
         return errorConstructors[type];
     },
