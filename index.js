@@ -1,9 +1,8 @@
-var _undefined;
 var isProto = Math.random();
 
-function inherit(ctor, superCtor) {
-    ctor.prototype = new superCtor(isProto); //hinting that a prototype object but not a regular instance is being constructed
-    ctor.superConstructor = superCtor;
+function inherit(ctor, SuperCtor) {
+    ctor.prototype = new SuperCtor(isProto); //hinting that a prototype object but not a regular instance is being constructed
+    ctor.superConstructor = SuperCtor;
     ctor.prototype.constructor = ctor;
 }
 
@@ -13,6 +12,7 @@ function UTError(x) {
     }
     Error.call(this);
     Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
+    var prop;
     var type = this.getType();
     var props = {
         message : type + ' Error',
@@ -26,7 +26,7 @@ function UTError(x) {
             props.message = x.message;
             props.cause   = x;
         } else {
-            for (var prop in x) {
+            for (prop in x) {
                 if (x.hasOwnProperty(prop)) {
                     props[prop] = x[prop];
                 }
@@ -34,25 +34,33 @@ function UTError(x) {
         }
     }
     props.type = type;
-    // TODO: translate props.message and set as props.print here
-    props.print = props.message; // set just default for now
-    if (props.params) {
-        props.print = interpolate(props.print, props.params);
-    }
-    var prop;
     for (prop in props) {
         if (props.hasOwnProperty(prop)) {
             this[prop] = props[prop];
         }
     }
-    props = prop = type = _undefined; // cleanup
-};
+}
 
 inherit(UTError, Error);
 
 UTError.prototype.getType = function() {
     return this.constructor.name;
+};
+
+var interpolationRegex = /{([^{}]*)}/g;
+
+function interpolate(message, params) {
+    return message.replace(interpolationRegex,
+        function(placeHolder, label) {
+            return params[label] || placeHolder;
+        }
+    );
 }
+
+UTError.prototype.interpolate = function(message) {
+    this.print = interpolate(message || this.print, this.params);
+    return this.print;
+};
 
 function createErrorConstructor(type, superCtor) {
     function CustomUTError(x) {
@@ -72,16 +80,6 @@ function createErrorConstructor(type, superCtor) {
     return CustomUTError;
 }
 
-var interpolationRegex = /{([^{}]*)}/g;
-
-function interpolate(message, params) {
-    return message.replace(interpolationRegex,
-        function(placeHolder, label, idx, str) {
-            return params[label] || placeHolder;
-        }
-    );
-}
-
 var errorConstructors = {};
 
 module.exports = {
@@ -97,7 +95,6 @@ module.exports = {
                 superConstructor = superType;
             }
             errorConstructors[type] = createErrorConstructor(type, superConstructor);
-            superConstructor = _undefined; // cleanup
         }
         return errorConstructors[type];
     },
