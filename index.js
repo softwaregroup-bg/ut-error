@@ -12,30 +12,23 @@ function UTError(x) {
     }
     Error.call(this);
     Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
-    var prop;
-    var props = {
-        message : 'Unknown Error'
-    };
     if (typeof x === 'string') {
-        props.message = x;
+        this.message = x;
     } else if (typeof x === 'object') {
         if (x instanceof Error) {
-            props.message = x.message;
-            props.cause   = x;
+            this.message = x.message;
+            this.cause   = x;
         } else {
-            for (prop in x) {
-                if (x.hasOwnProperty(prop)) {
-                    props[prop] = x[prop];
-                }
-            }
+            Object.keys(x).forEach(function(prop) {
+                this[prop] = x[prop];
+            }.bind(this));
         }
     }
-    for (prop in props) {
-        if (props.hasOwnProperty(prop)) {
-            this[prop] = props[prop];
-        }
+    if (!this.message) { // this is in case x is undefined or an object with a missing 'message' property
+        this.message = 'Unknown Error';
     }
     this.type = this.getType();
+    this.name = this.getName();
 }
 
 inherit(UTError, Error);
@@ -54,7 +47,7 @@ UTError.prototype.interpolate = function(message) {
     return this.print;
 };
 
-function createErrorConstructor(type, SuperCtor) {
+function createErrorConstructor(type, name, SuperCtor) {
     function CustomUTError(x) {
         if (x === isProto) { //knowing that a prototype object but not a regular instance is being constructed
             return;
@@ -67,6 +60,10 @@ function createErrorConstructor(type, SuperCtor) {
 
     CustomUTError.prototype.getType = function() {
         return type;
+    };
+
+    CustomUTError.prototype.getName = function() {
+        return name;
     };
 
     return CustomUTError;
@@ -86,7 +83,7 @@ module.exports = {
             SuperCtor = superType;
         }
         var type = SuperCtor === UTError ? name : SuperCtor.prototype.getType() + '.' + name;
-        return errorTypes[type] || (errorTypes[type] = createErrorConstructor(type, SuperCtor));
+        return errorTypes[type] || (errorTypes[type] = createErrorConstructor(type, name, SuperCtor));
     },
     get: function(type) {
         return type ? errorTypes[type] : errorTypes;
