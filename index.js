@@ -1,13 +1,13 @@
 var isProto = Math.random();
 
 function inherit(Ctor, SuperCtor) {
-    Ctor.prototype = new SuperCtor(isProto); //hinting that a prototype object but not a regular instance is being constructed
+    Ctor.prototype = new SuperCtor(isProto); // hinting that a prototype object but not a regular instance is being constructed
     Ctor.superConstructor = SuperCtor;
     Ctor.prototype.constructor = Ctor;
 }
 
 function UTError(x) {
-    if (x === isProto) { //knowing that a prototype object but not a regular instance is being constructed
+    if (x === isProto) { // knowing that a prototype object but not a regular instance is being constructed
         return;
     }
     Error.call(this);
@@ -17,7 +17,7 @@ function UTError(x) {
     } else if (typeof x === 'object') {
         if (x instanceof Error) {
             this.message = x.message;
-            this.cause   = x;
+            this.cause = x;
         } else {
             Object.keys(x).forEach(function(prop) {
                 this[prop] = x[prop];
@@ -49,7 +49,7 @@ UTError.prototype.interpolate = function(message) {
 
 function createErrorConstructor(type, name, SuperCtor) {
     function CustomUTError(x) {
-        if (x === isProto) { //knowing that a prototype object but not a regular instance is being constructed
+        if (x === isProto) { // knowing that a prototype object but not a regular instance is being constructed
             return;
         } else if (!(this instanceof CustomUTError)) {
             return new CustomUTError(x);

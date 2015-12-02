@@ -2,11 +2,17 @@
   "name": "ut-error",
   "version": "5.3.2",
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "ut-tools": "~0.5.1"
+  },
   "publishConfig": {
     "registry": "http://npm.softwaregroup-bg.com:5001"
   },
   "description": "UT error module",
+  "scripts": {
+    "lint": "ut-lint .",
+    "test": "npm run lint"
+  },
   "repository": {
     "type": "git",
     "url": "git@git.softwaregroup-bg.com:ut5/ut-error.git"

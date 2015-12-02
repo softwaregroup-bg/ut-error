@@ -16,21 +16,21 @@ var errorInstances = {
     errorType1: {
         noArgs: errorTypes.errorType1(),
         stringArg: errorTypes.errorType1('errorType1 custom stringArg message'),
-        objectArg: errorTypes.errorType1({code: 1, message: 'errorType1 custom objectArg message', cause:jsError}),
+        objectArg: errorTypes.errorType1({code: 1, message: 'errorType1 custom objectArg message', cause: jsError}),
         objectArgInterpolation: errorTypes.errorType1({message: 'errorType1 custom {test} objectArg message', params: {test: 'interpolated'}}),
         jsExceptionArg: errorTypes.errorType1(jsError)
     },
     errorType2: {
         noArgs: errorTypes.errorType2(),
         stringArg: errorTypes.errorType2('errorType2 custom stringArg message'),
-        objectArg: errorTypes.errorType2({code: 1, message: 'errorType2 custom objectArg message', cause:jsError}),
+        objectArg: errorTypes.errorType2({code: 1, message: 'errorType2 custom objectArg message', cause: jsError}),
         objectArgInterpolation: errorTypes.errorType2({message: 'errorType2 custom {test} objectArg message', params: {test: 'interpolated'}}),
         jsExceptionArg: errorTypes.errorType2(jsError)
     },
     errorType3: {
         noArgs: errorTypes.errorType3(),
         stringArg: errorTypes.errorType3('errorType3 custom stringArg message'),
-        objectArg: errorTypes.errorType3({code: 1, message: 'errorType3 custom objectArg message', cause:jsError}),
+        objectArg: errorTypes.errorType3({code: 1, message: 'errorType3 custom objectArg message', cause: jsError}),
         objectArgInterpolation: errorTypes.errorType3({message: 'errorType3 custom {test} objectArg message', params: {test: 'interpolated'}}),
         jsExceptionArg: errorTypes.errorType3(jsError)
     }
@@ -74,7 +74,7 @@ for (errorType in errorInstances) {
                 );
                 for (errType in errorTypes) {
                     if (errorTypes.hasOwnProperty(errType)) {
-                        if (parseInt(errorType.slice(-1)) >= parseInt(errType.slice(-1))) {
+                        if (parseInt(errorType.slice(-1), 10) >= parseInt(errType.slice(-1), 10)) {
                             console.log(
                                 (errorInstances[errorType][err] instanceof errorTypes[errType]) +
                                 ' <- ' +
@@ -96,7 +96,7 @@ for (errorType in errorInstances) {
             if (errorInstances[errorType].hasOwnProperty(err)) {
                 for (errType in errorTypes) {
                     if (errorTypes.hasOwnProperty(errType)) {
-                        if (parseInt(errorType.slice(-1)) < parseInt(errType.slice(-1))) {
+                        if (parseInt(errorType.slice(-1), 10) < parseInt(errType.slice(-1), 10)) {
                             console.log(
                                 (errorInstances[errorType][err] instanceof errorTypes[errType]) +
                                 ' <- ' +
