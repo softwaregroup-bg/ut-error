@@ -27,8 +27,6 @@ function UTError(x) {
     if (!this.message) { // this is in case x is undefined or an object with a missing 'message' property
         this.message = 'Unknown Error';
     }
-    this.type = this.getType();
-    this.name = this.getName();
 }
 
 inherit(UTError, Error);
@@ -55,16 +53,11 @@ function createErrorConstructor(type, name, SuperCtor) {
             return new CustomUTError(x);
         }
         SuperCtor.call(this, x);
+        this.type = type;
     }
     inherit(CustomUTError, SuperCtor);
 
-    CustomUTError.prototype.getType = function() {
-        return type;
-    };
-
-    CustomUTError.prototype.getName = function() {
-        return name;
-    };
+    CustomUTError.prototype.name = type;
 
     return CustomUTError;
 }
@@ -82,7 +75,7 @@ module.exports = {
         } else if ((typeof superType === 'function') && (superType.prototype instanceof UTError)) {
             SuperCtor = superType;
         }
-        var type = SuperCtor === UTError ? name : SuperCtor.prototype.getType() + '.' + name;
+        var type = SuperCtor === UTError ? name : SuperCtor.prototype.name + '.' + name;
         return errorTypes[type] || (errorTypes[type] = createErrorConstructor(type, name, SuperCtor));
     },
     get: function(type) {
