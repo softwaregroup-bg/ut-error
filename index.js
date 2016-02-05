@@ -45,7 +45,7 @@ UTError.prototype.interpolate = function(message) {
     return this.print;
 };
 
-function createErrorConstructor(type, name, SuperCtor) {
+function createErrorConstructor(type, name, SuperCtor, defaultMessage) {
     function CustomUTError(x) {
         if (x === isProto) { // knowing that a prototype object but not a regular instance is being constructed
             return;
@@ -54,6 +54,9 @@ function createErrorConstructor(type, name, SuperCtor) {
         }
         SuperCtor.call(this, x);
         this.type = type;
+        if (defaultMessage) {
+            this.message = defaultMessage;
+        }
     }
     inherit(CustomUTError, SuperCtor);
 
@@ -68,7 +71,7 @@ module.exports = {
     init: function(bus) {
 
     },
-    define: function(name, superType) {
+    define: function(name, superType, defaultMessage) {
         var SuperCtor = UTError;
         if ((typeof superType === 'string') && errorTypes[superType]) {
             SuperCtor = errorTypes[superType];
@@ -76,7 +79,7 @@ module.exports = {
             SuperCtor = superType;
         }
         var type = SuperCtor === UTError ? name : SuperCtor.prototype.name + '.' + name;
-        return errorTypes[type] || (errorTypes[type] = createErrorConstructor(type, name, SuperCtor));
+        return errorTypes[type] || (errorTypes[type] = createErrorConstructor(type, name, SuperCtor, defaultMessage));
     },
     get: function(type) {
         return type ? errorTypes[type] : errorTypes;
