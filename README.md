@@ -1,6 +1,6 @@
-##UT Error
+## UT Error
 
-'ut-error' is a module that should be used for generating errors everywhere within the ut-bus framework and all implementations based upon it. This is a module that offers functionalities for better error handling in the background and gives possibilities for dynamic error classes declaration and hierarchical chaining.
+ut-error is a module that should be used for generating errors everywhere within the ut-bus framework and all implementations based upon it. This is a module that offers functionalities for better error handling in the background and gives possibilities for dynamic error classes declaration and hierarchical chaining.
 
 
 ut-error should be used mainly through its 'define' method. For example:
