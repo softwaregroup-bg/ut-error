@@ -73,10 +73,12 @@ module.exports = {
     },
     define: function(name, superType, defaultMessage) {
         var SuperCtor = UTError;
-        if ((typeof superType === 'string') && errorTypes[superType]) {
-            SuperCtor = errorTypes[superType];
-        } else if ((typeof superType === 'function') && (superType.prototype instanceof UTError)) {
-            SuperCtor = superType;
+        if (superType) {
+            if ((typeof superType === 'string') && errorTypes[superType]) {
+                SuperCtor = errorTypes[superType];
+            } else if ((typeof superType === 'function') && (superType.prototype instanceof UTError)) {
+                SuperCtor = superType;
+            }
         }
         var type = SuperCtor === UTError ? name : SuperCtor.prototype.name + '.' + name;
         return errorTypes[type] || (errorTypes[type] = createErrorConstructor(type, name, SuperCtor, defaultMessage));
