@@ -26,12 +26,14 @@ function UTError(x) {
     }
     if (!this.message) { // this is in case x is undefined or an object with a missing 'message' property
         this.message = 'Unknown Error';
+    } else {
+        this.message = this.interpolate(this.message);
     }
 }
 
 inherit(UTError, Error);
 
-var interpolationRegex = /{([^{}]*)}/g;
+var interpolationRegex = /\{([^\}]*)\}/g;
 function interpolate(message, params) {
     return message.replace(interpolationRegex,
         function(placeHolder, label) {
