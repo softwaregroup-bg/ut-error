@@ -1,3 +1,4 @@
+/* eslint no-console:0 */
 var utError = require('ut-error');
 
 var errorType1 = utError.define('ErrorType1');
