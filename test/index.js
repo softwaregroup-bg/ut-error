@@ -1,5 +1,5 @@
 /* eslint no-console:0 */
-var utError = require('ut-error');
+var utError = require('../index');
 
 var errorType1 = utError.define('ErrorType1');
 var errorType2 = utError.define('ErrorType2', errorType1);
