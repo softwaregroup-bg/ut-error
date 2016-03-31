@@ -1,3 +1,13 @@
+<a name="5.3.10"></a>
+## [5.3.10](https://git.softwaregroup-bg.com/ut5/ut-error/compare/v5.3.9...v5.3.10) (2016-03-31)
+
+
+### Bug Fixes
+
+* remove self require ([dd55f0c](https://git.softwaregroup-bg.com/ut5/ut-error/commit/dd55f0c))
+
+
+
 <a name="5.3.9"></a>
 ## [5.3.9](https://git.softwaregroup-bg.com/ut5/ut-error/compare/v5.3.8...v5.3.9) (2016-03-31)
 
