@@ -1,7 +1,7 @@
 var isProto = Math.random();
 
 function inherit(Ctor, SuperCtor) {
-    Ctor.prototype = new SuperCtor(isProto); // hinting that a prototype object but not a regular instance is being constructed
+    Ctor.prototype = (SuperCtor === Error) ? new Error() : new SuperCtor(isProto); // hinting that a prototype object but not a regular instance is being constructed
     Ctor.superConstructor = SuperCtor;
     Ctor.prototype.constructor = Ctor;
 }
@@ -27,7 +27,7 @@ function UTError(x) {
     if (!this.message) { // this is in case x is undefined or an object with a missing 'message' property
         this.message = 'Unknown Error';
     } else {
-        this.message = this.interpolate(this.message);
+        this.message && (this.message = this.interpolate(this.message));
     }
 }
 
