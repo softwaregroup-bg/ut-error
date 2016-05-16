@@ -1,3 +1,13 @@
+<a name="5.3.12"></a>
+## [5.3.12](https://git.softwaregroup-bg.com/ut5/ut-error/compare/v5.3.11...v5.3.12) (2016-05-16)
+
+
+### Bug Fixes
+
+* do not set message in prototype ([af11d22](https://git.softwaregroup-bg.com/ut5/ut-error/commit/af11d22))
+
+
+
 <a name="5.3.11"></a>
 ## [5.3.11](https://git.softwaregroup-bg.com/ut5/ut-error/compare/v5.3.10...v5.3.11) (2016-04-15)
 
