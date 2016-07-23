@@ -1,6 +1,6 @@
 {
   "name": "ut-error",
-  "version": "5.3.12",
+  "version": "5.3.13",
   "dependencies": {},
   "devDependencies": {
     "ut-tools": "^5.3.13"
