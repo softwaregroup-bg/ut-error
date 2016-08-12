@@ -1,3 +1,13 @@
+<a name="5.3.14"></a>
+## [5.3.14](https://github.com/softwaregroup-bg/ut-error/compare/v5.3.13...v5.3.14) (2016-08-12)
+
+
+### Bug Fixes
+
+* publish to npm ([53da8c6](https://github.com/softwaregroup-bg/ut-error/commit/53da8c6))
+
+
+
 <a name="5.3.13"></a>
 ## [5.3.13](https://git.softwaregroup-bg.com/ut5/ut-error/compare/v5.3.12...v5.3.13) (2016-07-23)
 
