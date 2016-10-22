@@ -57,7 +57,7 @@ function createErrorConstructor(type, name, SuperCtor, defaultMessage) {
         SuperCtor.call(this, x);
         this.type = type;
         if (defaultMessage) {
-            this.message = defaultMessage;
+            this.message = this.interpolate(defaultMessage);
         }
     }
     inherit(CustomUTError, SuperCtor);
