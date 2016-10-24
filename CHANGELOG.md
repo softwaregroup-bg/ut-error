@@ -1,3 +1,13 @@
+<a name="5.3.16"></a>
+## [5.3.16](https://github.com/softwaregroup-bg/ut-error/compare/v5.3.15...v5.3.16) (2016-10-24)
+
+
+### Bug Fixes
+
+* interpolate the default message ([fb06a34](https://github.com/softwaregroup-bg/ut-error/commit/fb06a34))
+
+
+
 <a name="5.3.15"></a>
 ## [5.3.15](https://github.com/softwaregroup-bg/ut-error/compare/v5.3.14...v5.3.15) (2016-09-20)
 
