@@ -68,13 +68,17 @@ function createErrorConstructor(type, name, SuperCtor, defaultMessage) {
 }
 
 var errorTypes = {};
+var errors = {};
 
 module.exports = {
     init: function(bus) {
 
     },
-    define: function(name, superType, defaultMessage) {
+    define: function(name, superType, defaultMessage, errorObject) {
         var SuperCtor = UTError;
+        if ((typeof superType === 'string') && !errors[superType]) {
+            errors[superType] = errorObject;
+        };
         if (superType) {
             if ((typeof superType === 'string') && errorTypes[superType]) {
                 SuperCtor = errorTypes[superType];
@@ -87,5 +91,6 @@ module.exports = {
     },
     get: function(type) {
         return type ? errorTypes[type] : errorTypes;
-    }
+    },
+    errors: errors
 };
