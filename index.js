@@ -76,8 +76,8 @@ module.exports = {
     },
     define: function(name, superType, defaultMessage, errorObject) {
         var SuperCtor = UTError;
-        if ((typeof superType === 'string') && !errors[superType]) {
-            errors[superType] = errorObject;
+        if (errorObject && (typeof errorObject.name === 'string') && !errors[errorObject.name]) {
+            errors[errorObject.name] = errorObject;
         };
         if (superType) {
             if ((typeof superType === 'string') && errorTypes[superType]) {
