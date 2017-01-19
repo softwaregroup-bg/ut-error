@@ -1,3 +1,19 @@
+<a name="5.4.0"></a>
+# [5.4.0](https://github.com/softwaregroup-bg/ut-error/compare/v5.3.16...v5.4.0) (2017-01-19)
+
+
+### Bug Fixes
+
+* show all error messages ([5288014](https://github.com/softwaregroup-bg/ut-error/commit/5288014))
+* UIS-311 linting ([34ec66e](https://github.com/softwaregroup-bg/ut-error/commit/34ec66e))
+
+
+### Features
+
+* UIS-314 modify define method ([97168fa](https://github.com/softwaregroup-bg/ut-error/commit/97168fa))
+
+
+
 <a name="5.3.16"></a>
 ## [5.3.16](https://github.com/softwaregroup-bg/ut-error/compare/v5.3.15...v5.3.16) (2016-10-24)
 
