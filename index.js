@@ -37,7 +37,7 @@ var interpolationRegex = /\{([^}]*)\}/g;
 function interpolate(message, params) {
     return message.replace(interpolationRegex,
         function(placeHolder, label) {
-            return params[label] || placeHolder;
+            return (params && params[label]) || placeHolder;
         }
     );
 }
