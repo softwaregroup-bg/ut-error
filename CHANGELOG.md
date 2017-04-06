@@ -1,3 +1,13 @@
+<a name="5.4.1"></a>
+## [5.4.1](https://github.com/softwaregroup-bg/ut-error/compare/v5.4.0...v5.4.1) (2017-04-06)
+
+
+### Bug Fixes
+
+* add check for params ([4a19886](https://github.com/softwaregroup-bg/ut-error/commit/4a19886))
+
+
+
 <a name="5.4.0"></a>
 # [5.4.0](https://github.com/softwaregroup-bg/ut-error/compare/v5.3.16...v5.4.0) (2017-01-19)
 
