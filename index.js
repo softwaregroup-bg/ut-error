@@ -34,16 +34,14 @@ function UTError(x) {
 inherit(UTError, Error);
 
 var interpolationRegex = /\{([^}]*)\}/g;
-function interpolate(message, params) {
-    return message.replace(interpolationRegex,
-        function(placeHolder, label) {
-            return (params && params[label]) || placeHolder;
-        }
-    );
-}
 
 UTError.prototype.interpolate = function(message) {
-    this.print = interpolate(message || this.print, this.params);
+    if (message) {
+        this.print = message;
+    }
+    if (this.params) {
+        this.print = this.print.replace(interpolationRegex, (placeHolder, label) => (this.params[label]));
+    }
     return this.print;
 };
 
