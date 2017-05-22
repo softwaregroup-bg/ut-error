@@ -1,3 +1,8 @@
+<a name="5.4.7"></a>
+## [5.4.7](https://github.com/softwaregroup-bg/ut-error/compare/v5.4.6...v5.4.7) (2017-05-22)
+
+
+
 <a name="5.4.6"></a>
 ## [5.4.6](https://github.com/softwaregroup-bg/ut-error/compare/v5.4.5...v5.4.6) (2017-05-22)
 
