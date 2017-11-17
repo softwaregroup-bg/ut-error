@@ -25,10 +25,9 @@ function UTError(x) {
             }.bind(this));
         }
     }
-    if (!this.code) {
-        // unknown error in iso8583
-        this.code = 96;
-    }
+    // if (!this.code) {
+    //     this.code = 96; // todo: default error code?
+    // }
     if (!this.message) { // this is in case x is undefined or an object with a missing 'message' property
         this.message = 'Unknown Error';
     } else {
