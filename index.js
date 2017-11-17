@@ -16,6 +16,7 @@ function UTError(x) {
         this.message = x;
     } else if (typeof x === 'object') {
         if (x instanceof Error) {
+            this.code = x.code;
             this.message = x.message;
             this.cause = x;
         } else {
@@ -24,6 +25,9 @@ function UTError(x) {
             }.bind(this));
         }
     }
+    // if (!this.code) {
+    //     this.code = 96; // todo: default error code?
+    // }
     if (!this.message) { // this is in case x is undefined or an object with a missing 'message' property
         this.message = 'Unknown Error';
     } else {
@@ -45,7 +49,7 @@ UTError.prototype.interpolate = function(message) {
     return this.print;
 };
 
-function createErrorConstructor(type, name, SuperCtor, defaultMessage) {
+function createErrorConstructor(type, name, SuperCtor, defaultMessage, code) {
     function CustomUTError(x) {
         if (x === isProto) { // knowing that a prototype object but not a regular instance is being constructed
             return;
@@ -54,6 +58,7 @@ function createErrorConstructor(type, name, SuperCtor, defaultMessage) {
         }
         SuperCtor.call(this, x);
         this.type = type;
+        this.code = code || this.code;
         if (defaultMessage) {
             this.message = this.interpolate(defaultMessage);
         }
@@ -72,7 +77,7 @@ module.exports = {
     init: function(bus) {
 
     },
-    define: function(name, superType, defaultMessage, errorObject) {
+    define: function(name, superType, defaultMessage, errorObject, code) {
         var SuperCtor = UTError;
         if (errorObject && (typeof errorObject.name === 'string') && !errors[errorObject.name]) {
             errors[errorObject.name] = errorObject;
@@ -85,7 +90,7 @@ module.exports = {
             }
         }
         var type = SuperCtor === UTError ? name : SuperCtor.prototype.name + '.' + name;
-        return errorTypes[type] || (errorTypes[type] = createErrorConstructor(type, name, SuperCtor, defaultMessage));
+        return errorTypes[type] || (errorTypes[type] = createErrorConstructor(type, name, SuperCtor, defaultMessage, code));
     },
     get: function(type) {
         return type ? errorTypes[type] : errorTypes;
