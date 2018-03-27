@@ -1,39 +1,33 @@
 /* eslint no-console:0 */
 var utError = require('../index');
 
-var errorType1 = utError.define('ErrorType1');
-var errorType2 = utError.define('ErrorType2', errorType1);
-var errorType3 = utError.define('ErrorType3', errorType2);
+var errorType1 = utError.define('errorType1');
+var errorType2 = utError.define('errorType2', errorType1, 'errorType2 error message: {x} {y}');
+var errorType3 = utError.define('errorType3', errorType2, 'errorType3 error message: {x} {y}');
 
 var errorTypes = {
-    errorType1: errorType1,
-    errorType2: errorType2,
-    errorType3: errorType3
+    errorType1,
+    errorType2,
+    errorType3
 };
 
 var jsError = new Error('root error');
 
 var errorInstances = {
     errorType1: {
-        noArgs: errorTypes.errorType1(),
-        stringArg: errorTypes.errorType1('errorType1 custom stringArg message'),
-        objectArg: errorTypes.errorType1({code: 1, message: 'errorType1 custom objectArg message', cause: jsError}),
-        objectArgInterpolation: errorTypes.errorType1({message: 'errorType1 custom {test} objectArg message', params: {test: 'interpolated'}}),
-        jsExceptionArg: errorTypes.errorType1(jsError)
+        objectArg: errorType1({x: 1, y: 2}),
+        objectArgInterpolation: errorType1({params: {x: 1, y: 2}}),
+        jsExceptionArg: errorType1(jsError)
     },
     errorType2: {
-        noArgs: errorTypes.errorType2(),
-        stringArg: errorTypes.errorType2('errorType2 custom stringArg message'),
-        objectArg: errorTypes.errorType2({code: 1, message: 'errorType2 custom objectArg message', cause: jsError}),
-        objectArgInterpolation: errorTypes.errorType2({message: 'errorType2 custom {test} objectArg message', params: {test: 'interpolated'}}),
-        jsExceptionArg: errorTypes.errorType2(jsError)
+        objectArg: errorType2({x: 1, y: 2}),
+        objectArgInterpolation: errorType2({params: {x: 1}}),
+        jsExceptionArg: errorType2(jsError)
     },
     errorType3: {
-        noArgs: errorTypes.errorType3(),
-        stringArg: errorTypes.errorType3('errorType3 custom stringArg message'),
-        objectArg: errorTypes.errorType3({code: 1, message: 'errorType3 custom objectArg message', cause: jsError}),
-        objectArgInterpolation: errorTypes.errorType3({message: 'errorType3 custom {test} objectArg message', params: {test: 'interpolated'}}),
-        jsExceptionArg: errorTypes.errorType3(jsError)
+        objectArg: errorType3({x: 1, y: 2}),
+        objectArgInterpolation: errorType3({params: {x: 1, y: 2}}),
+        jsExceptionArg: errorType3(jsError)
     }
 };
 
