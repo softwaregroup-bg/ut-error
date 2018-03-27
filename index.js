@@ -2,6 +2,7 @@ const isProto = Symbol.for('isProto');
 const interpolationRegex = /\{([^}]*)\}/g;
 const nameRegex = /^[a-z][a-zA-Z_0-9]*$/;
 const errorTypes = {};
+var initialized = false;
 var log;
 
 function deprecationWarning(msg, context) {
@@ -67,7 +68,11 @@ function createErrorConstructor(type, SuperCtor, message) {
 
 module.exports = {
     init: function(bus) {
-        if (bus.logFactory) {
+        if (initialized) {
+            return;
+        }
+        initialized = true;
+        if (bus && bus.logFactory) {
             log = bus.logFactory.createLog(bus.logLevel, {name: 'utError', context: 'utError'});
         }
     },
