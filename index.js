@@ -68,7 +68,7 @@ function createErrorConstructor(type, SuperCtor, message) {
 module.exports = {
     init: function(bus) {
         if (bus.logFactory) {
-            log = bus.logFactory.createLog(bus.logLevel, {name: 'utError', context: 'utError'})
+            log = bus.logFactory.createLog(bus.logLevel, {name: 'utError', context: 'utError'});
         }
     },
     define: function(name, superType, message) {
