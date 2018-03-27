@@ -15,6 +15,12 @@ function inherit(Ctor, SuperCtor) {
     Ctor.prototype.constructor = Ctor;
 }
 
+function interpolate(message, params) {
+    return message.replace(interpolationRegex, (placeHolder, label) => {
+        return typeof params[label] === 'undefined' ? `?${label}?` : params[label];
+    });
+};
+
 function UTError(x) {
     if (x === isProto) { // knowing that a prototype object but not a regular instance is being constructed
         return;
@@ -23,25 +29,11 @@ function UTError(x) {
     Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
     var defaultMessage = this.defaultMessage;
     if (x instanceof Error) {
-        this.message = x.message;
         this.cause = x;
     } else {
-        Object.keys(x).forEach(function(prop) {
-            this[prop] = x[prop];
-        }.bind(this));
+        Object.assign(this, x);
     }
-    if (defaultMessage) {
-        if (typeof this.params === 'object') {
-            this.message = defaultMessage.replace(interpolationRegex, (placeHolder, label) => {
-                return typeof this.params[label] === 'undefined' ? `?${label}?` : this.params[label];
-            });
-        } else {
-            this.message = defaultMessage;
-        }
-    }
-    if (!this.message) {
-        this.message = 'Unknown Error';
-    }
+    this.message = interpolate(defaultMessage || x.message || 'Unknown Error', x.params || {});
 }
 
 inherit(UTError, Error);

@@ -1,4 +1,5 @@
 /* eslint no-console:0 */
+var util = require('util');
 var utError = require('../index');
 
 var errorType1 = utError.define('errorType1');
@@ -17,7 +18,8 @@ var errorInstances = {
     errorType1: {
         objectArg: errorType1({x: 1, y: 2}),
         objectArgInterpolation: errorType1({params: {x: 1, y: 2}}),
-        jsExceptionArg: errorType1(jsError)
+        jsExceptionArg: errorType1(jsError),
+        jsExceptionArgWithParams: errorType1(Object.assign(new Error('error with params {x} {y}'), {params: {x: 'A', y: 'B'}}))
     },
     errorType2: {
         objectArg: errorType2({x: 1, y: 2}),
@@ -49,7 +51,7 @@ for (errorType in errorInstances) {
                         props[prop] = errorInstances[errorType][err][prop];
                     }
                 }
-                console.log('\nProperties:\n\n' + JSON.stringify(props, null, 4), '\n');
+                console.log('\nProperties:\n\n' + util.inspect(props, {depth: null, colors: true}), '\n');
                 console.log('\nStack:\n\n' + errorInstances[errorType][err].stack);
             }
         }
