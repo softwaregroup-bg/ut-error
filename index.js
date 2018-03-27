@@ -2,11 +2,10 @@ const isProto = Symbol.for('isProto');
 const interpolationRegex = /\{([^}]*)\}/g;
 const nameRegex = /^[a-z][a-zA-Z_0-9]*$/;
 const errorTypes = {};
-var initialized = false;
-var log;
+let log;
 
 function deprecationWarning(msg, context) {
-    log.warn && log.warn(`${msg}${context ? ' :::: ' + JSON.stringify(context) : ''}`, {mtid: 'WARNING'});
+    log.warn && log.warn(`${msg}${context ? ' :::: ' + JSON.stringify(context) : ''}`, {mtid: 'DEPRECATION'});
 }
 
 function inherit(Ctor, SuperCtor) {
@@ -14,12 +13,6 @@ function inherit(Ctor, SuperCtor) {
     Ctor.superConstructor = SuperCtor;
     Ctor.prototype.constructor = Ctor;
 }
-
-function interpolate(message, params) {
-    return message.replace(interpolationRegex, (placeHolder, label) => {
-        return typeof params[label] === 'undefined' ? `?${label}?` : params[label];
-    });
-};
 
 function UTError(x) {
     if (x === isProto) { // knowing that a prototype object but not a regular instance is being constructed
@@ -29,11 +22,25 @@ function UTError(x) {
     Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
     var defaultMessage = this.defaultMessage;
     if (x instanceof Error) {
+        this.message = x.message;
         this.cause = x;
     } else {
-        Object.assign(this, x);
+        Object.keys(x).forEach(function(prop) {
+            this[prop] = x[prop];
+        }.bind(this));
     }
-    this.message = interpolate(defaultMessage || x.message || 'Unknown Error', x.params || {});
+    if (defaultMessage) {
+        if (typeof this.params === 'object') {
+            this.message = defaultMessage.replace(interpolationRegex, (placeHolder, label) => {
+                return typeof this.params[label] === 'undefined' ? `?${label}?` : this.params[label];
+            });
+        } else {
+            this.message = defaultMessage;
+        }
+    }
+    if (!this.message) {
+        this.message = 'Unknown Error';
+    }
 }
 
 inherit(UTError, Error);
@@ -60,12 +67,8 @@ function createErrorConstructor(type, SuperCtor, message) {
 
 module.exports = {
     init: function(bus) {
-        if (initialized) {
-            return;
-        }
-        initialized = true;
-        if (bus && bus.logFactory) {
-            log = bus.logFactory.createLog(bus.logLevel, {name: 'utError', context: 'utError'});
+        if (bus.logFactory) {
+            log = bus.logFactory.createLog(bus.logLevel, {name: 'utError', context: 'utError'})
         }
     },
     define: function(name, superType, message) {
