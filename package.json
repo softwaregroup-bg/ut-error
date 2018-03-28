@@ -20,6 +20,7 @@
     "prepush": "ut-prepush",
     "pretest": "ut-pretest",
     "preversion": "ut-preversion",
+    "precover": "ut-precover",
     "test": "ut-test",
     "version": "ut-version",
     "jenkins": "ut-jenkins",
