@@ -1,12 +1,12 @@
-const isProto = Symbol.for('isProto');
-const interpolationRegex = /\{([^}]*)\}/g;
-const nameRegex = /^[a-z][a-zA-Z_0-9]*$/;
-const errorTypes = {};
+var isProto = Symbol.for('isProto');
+var interpolationRegex = /\{([^}]*)\}/g;
+var nameRegex = /^[a-z][a-zA-Z_0-9]*$/;
+var errorTypes = {};
 var initialized = false;
 var log;
 
 function deprecationWarning(msg, context) {
-    log.warn && log.warn(`${msg}${context ? ' :::: ' + JSON.stringify(context) : ''}`, {mtid: 'WARNING'});
+    log && log.warn && log.warn(`${msg} :::: ${JSON.stringify(context)}`, {mtid: 'DEPRECATION'});
 }
 
 function inherit(Ctor, SuperCtor) {
