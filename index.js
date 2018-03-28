@@ -1,12 +1,13 @@
 var isProto = Symbol.for('isProto');
 var interpolationRegex = /\{([^}]*)\}/g;
-var nameRegex = /^[a-z][a-zA-Z_0-9]*$/;
+var nameRegex = /^[a-z][a-zA-Z]*$/;
 var errorTypes = {};
 var initialized = false;
 var log;
 
 function deprecationWarning(msg, context) {
-    log && log.warn && log.warn(`${msg} :::: ${JSON.stringify(context)}`, {mtid: 'DEPRECATION'});
+    var e = new Error();
+    log && log.warn && log.warn(msg, {mtid: 'DEPRECATION', context, stack: e.stack.split('\n').splice(3).join('\n')});
 }
 
 function inherit(Ctor, SuperCtor) {
@@ -68,16 +69,16 @@ module.exports = {
             log = bus.logFactory.createLog(bus.logLevel, {name: 'utError', context: 'utError'});
         }
     },
-    define: function(name, superType, message) {
-        if (typeof name !== 'string') {
-            deprecationWarning('name must be a string!', {name});
-        } else if (!nameRegex.test(name)) {
-            deprecationWarning(`name must match ${nameRegex}`, {name});
+    define: function(id, superType, message) {
+        if (typeof id !== 'string') {
+            deprecationWarning('error identifier must be a string', {id});
+        } else if (!nameRegex.test(id)) {
+            deprecationWarning('error identifier must be alphabetic and start with lowercase', {id});
         }
         var SuperCtor = UTError;
         if (superType) {
             if (typeof message !== 'string') {
-                deprecationWarning('message must be predefined!', {name});
+                deprecationWarning('missing error message', {id});
             }
             if (typeof superType === 'string' && errorTypes[superType]) {
                 SuperCtor = errorTypes[superType];
@@ -85,7 +86,7 @@ module.exports = {
                 SuperCtor = superType;
             }
         }
-        var type = SuperCtor === UTError ? name : SuperCtor.type + '.' + name;
+        var type = SuperCtor === UTError ? id : SuperCtor.type + '.' + id;
         return errorTypes[type] || (errorTypes[type] = createErrorConstructor(type, SuperCtor, message));
     },
     get: function(type) {
