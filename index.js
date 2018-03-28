@@ -39,7 +39,7 @@ function UTError(x) {
 
 inherit(UTError, Error);
 
-function createErrorConstructor(type, SuperCtor, message) {
+function createErrorConstructor(type, SuperCtor, message, level) {
     function CustomUTError(x) {
         if (x === isProto) { // knowing that a prototype object but not a regular instance is being constructed
             return;
@@ -52,6 +52,7 @@ function createErrorConstructor(type, SuperCtor, message) {
         SuperCtor.call(this, x);
         this.type = type;
         this.defaultMessage = message;
+        if (level) this.level = level;
     }
     inherit(CustomUTError, SuperCtor);
     CustomUTError.type = type;
@@ -69,11 +70,15 @@ module.exports = {
             log = bus.logFactory.createLog(bus.logLevel, {name: 'utError', context: 'utError'});
         }
     },
-    define: function(id, superType, message) {
+    define: function(id, superType, message, level) {
         if (typeof id !== 'string') {
             deprecationWarning('error identifier must be a string', {id});
         } else if (!nameRegex.test(id)) {
             deprecationWarning('error identifier must be alphabetic and start with lowercase', {id});
+        }
+        if (typeof level === 'object') {
+            deprecationWarning('level must be string', {id});
+            level = level.level;
         }
         var SuperCtor = UTError;
         if (superType) {
@@ -87,7 +92,7 @@ module.exports = {
             }
         }
         var type = SuperCtor === UTError ? id : SuperCtor.type + '.' + id;
-        return errorTypes[type] || (errorTypes[type] = createErrorConstructor(type, SuperCtor, message));
+        return errorTypes[type] || (errorTypes[type] = createErrorConstructor(type, SuperCtor, message, level));
     },
     get: function(type) {
         return type ? errorTypes[type] : errorTypes;
