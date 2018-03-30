@@ -51,11 +51,11 @@ function createErrorConstructor(type, SuperCtor, message, level) {
         }
         SuperCtor.call(this, x);
         this.type = type;
-        this.defaultMessage = message;
-        if (level) this.level = level;
+        if (level && !this.level) this.level = level;
     }
     inherit(CustomUTError, SuperCtor);
     CustomUTError.type = type;
+    CustomUTError.level = level;
     CustomUTError.prototype.defaultMessage = message;
     return CustomUTError;
 }
