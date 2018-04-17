@@ -1,5 +1,3 @@
-var isProto = Symbol.for('isProto');
-var interpolationRegex = /\{([^}]*)\}/g;
 var nameRegex = /^[a-z][a-zA-Z]*$/;
 var initialized = false;
 var log;
@@ -9,54 +7,31 @@ function deprecationWarning(msg, context) {
     log && log.warn && log.warn(msg, {mtid: 'DEPRECATION', context, stack: e.stack.split('\n').splice(3).join('\n')});
 }
 
-function inherit(Ctor, SuperCtor) {
-    Ctor.prototype = (SuperCtor === Error) ? new Error() : new SuperCtor(isProto); // hinting that a prototype object but not a regular instance is being constructed
-    Ctor.superConstructor = SuperCtor;
-    Ctor.prototype.constructor = Ctor;
-}
-
-function interpolate(message, params) {
-    return message.replace(interpolationRegex, (placeHolder, label) => {
-        return typeof params[label] === 'undefined' ? `?${label}?` : params[label];
-    });
-};
-
-function UTError(x) {
-    if (x === isProto) { // knowing that a prototype object but not a regular instance is being constructed
-        return;
-    }
-    Error.call(this);
-    Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
-    var defaultMessage = this.defaultMessage;
-    if (x instanceof Error) {
-        this.cause = x;
-    } else {
-        Object.assign(this, x);
-    }
-    this.message = interpolate(defaultMessage || x.message || 'Unknown Error', x.params || {});
-}
-
-inherit(UTError, Error);
-
 function createErrorConstructor(type, SuperCtor, message, level) {
-    function CustomUTError(x) {
-        if (x === isProto) { // knowing that a prototype object but not a regular instance is being constructed
-            return;
-        } else if (!(this instanceof CustomUTError)) {
-            return new CustomUTError(x);
-        } else if (typeof x !== 'object') {
-            deprecationWarning('argument must be an object', {argument: x, type});
-            x = {message: x}; // temporary polyfill
+    class CustomUTError extends SuperCtor {
+        constructor(x) {
+            if (typeof x !== 'object') {
+                deprecationWarning('argument must be an object', {argument: x, type});
+                x = {message: x}; // temporary polyfill
+            }
+            super(x);
+            this.type = type;
+            if (level && !this.level) this.level = level;
         }
-        SuperCtor.call(this, x);
-        this.type = type;
-        if (level && !this.level) this.level = level;
+        get defaultMessage() {
+            return message;
+        }
+        static get type() {
+            return type;
+        }
+        static get level() {
+            return level;
+        }
+
     }
-    inherit(CustomUTError, SuperCtor);
-    CustomUTError.type = type;
-    CustomUTError.level = level;
-    CustomUTError.prototype.defaultMessage = message;
-    return CustomUTError;
+    return function customError(x) {
+        return new CustomUTError(x);
+    };
 }
 
 var errorTypes = {
@@ -107,4 +82,8 @@ module.exports = {
         }
         return errorTypes[type] || errorTypes.unknownType.bind(null, {params: {type}});
     }
+};
+
+module.exports = (bus) => {
+
 };
