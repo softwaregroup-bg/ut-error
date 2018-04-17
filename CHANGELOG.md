@@ -1,3 +1,13 @@
+<a name="5.5.0"></a>
+# [5.5.0](https://github.com/softwaregroup-bg/ut-error/compare/v5.4.9...v5.5.0) (2018-04-17)
+
+
+### Bug Fixes
+
+* standardize api ([b9b67ba](https://github.com/softwaregroup-bg/ut-error/commit/b9b67ba))
+
+
+
 <a name="5.4.9"></a>
 ## [5.4.9](https://github.com/softwaregroup-bg/ut-error/compare/v5.4.8...v5.4.9) (2017-05-22)
 
