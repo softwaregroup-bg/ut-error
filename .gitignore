@@ -2,5 +2,4 @@
 *sublime*
 /node_modules/**/*
 *.log
-factory
 package-lock.json
