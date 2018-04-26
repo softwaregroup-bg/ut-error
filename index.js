@@ -96,10 +96,31 @@ module.exports = {
         }
         var type = SuperCtor === UTError ? id : SuperCtor.type + '.' + id;
         if (errorTypes[type]) {
-            throw errorTypes.typeExists({params: {id, type}});
+            let error = errorTypes.typeExists({params: {id, type}});
+            deprecationWarning(error.message);
+            // throw error;
         }
         errorTypes[type] = createErrorConstructor(type, SuperCtor, message, level);
         return errorTypes[type];
+    },
+    fetch: function(RootError) {
+        if (!RootError) {
+            RootError = UTError;
+        } else {
+            if (typeof RootError === 'string') {
+                RootError = errorTypes[RootError];
+            }
+            if (!UTError.isPrototypeOf(RootError)) {
+                return {}; // maybe throw
+            }
+        }
+        return Object.keys(errorTypes).reduce((all, type) => {
+            let Err = errorTypes[type];
+            if (Err === RootError || RootError.isPrototypeOf(Err)) {
+                all[type] = Err;
+            }
+            return all;
+        }, {});
     },
     get: function(type) {
         if (!type) {
