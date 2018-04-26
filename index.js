@@ -123,9 +123,11 @@ module.exports = {
         }, {});
     },
     get: function(type) {
-        if (!type) {
+        if (!type) { // TODO: remove check. use fetch for fetching multiple error definitions
             return errorTypes;
         }
-        return errorTypes[type] || errorTypes.unknownType.bind(null, {params: {type}});
+        return errorTypes[type];
+        // TODO: should we return unknownType error or leave it undefined?
+        // return errorTypes[type] || errorTypes.unknownType.bind(null, {params: {type}});
     }
 };
