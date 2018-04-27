@@ -1,3 +1,13 @@
+<a name="5.6.1"></a>
+## [5.6.1](https://github.com/softwaregroup-bg/ut-error/compare/v5.6.0...v5.6.1) (2018-04-27)
+
+
+### Bug Fixes
+
+* add compatibility for non es6 constructs ([e37ad8f](https://github.com/softwaregroup-bg/ut-error/commit/e37ad8f))
+
+
+
 <a name="5.6.0"></a>
 # [5.6.0](https://github.com/softwaregroup-bg/ut-error/compare/v5.5.0...v5.6.0) (2018-04-27)
 
