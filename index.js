@@ -1,7 +1,6 @@
 var isProto = Symbol.for('isProto');
 var interpolationRegex = /\{([^}]*)\}/g;
 var nameRegex = /^[a-z][a-zA-Z]*$/;
-var errorTypes = {};
 var initialized = false;
 var log;
 
@@ -60,6 +59,10 @@ function createErrorConstructor(type, SuperCtor, message, level) {
     return CustomUTError;
 }
 
+var errorTypes = {
+    typeExists: createErrorConstructor('typeExists', UTError, 'Error {id} is already defined! Type: {type}', 'error'),
+    unknownType: createErrorConstructor('unknownType', UTError, 'Unknown error type: {type}', 'error')
+};
 module.exports = {
     init: function(bus) {
         if (initialized) {
@@ -92,9 +95,39 @@ module.exports = {
             }
         }
         var type = SuperCtor === UTError ? id : SuperCtor.type + '.' + id;
-        return errorTypes[type] || (errorTypes[type] = createErrorConstructor(type, SuperCtor, message, level));
+        if (errorTypes[type]) {
+            let error = errorTypes.typeExists({params: {id, type}});
+            deprecationWarning(error.message);
+            // throw error;
+        }
+        errorTypes[type] = createErrorConstructor(type, SuperCtor, message, level);
+        return errorTypes[type];
+    },
+    fetch: function(RootError) {
+        if (!RootError) {
+            RootError = UTError;
+        } else {
+            if (typeof RootError === 'string') {
+                RootError = errorTypes[RootError];
+            }
+            if (!UTError.isPrototypeOf(RootError)) {
+                return {}; // maybe throw
+            }
+        }
+        return Object.keys(errorTypes).reduce((all, type) => {
+            let Err = errorTypes[type];
+            if (Err === RootError || RootError.isPrototypeOf(Err)) {
+                all[type] = Err;
+            }
+            return all;
+        }, {});
     },
     get: function(type) {
-        return type ? errorTypes[type] : errorTypes;
+        if (!type) { // TODO: remove check. use fetch for fetching multiple error definitions
+            return errorTypes;
+        }
+        return errorTypes[type];
+        // TODO: should we return unknownType error or leave it undefined?
+        // return errorTypes[type] || errorTypes.unknownType.bind(null, {params: {type}});
     }
 };
