@@ -110,17 +110,18 @@ module.exports = {
             if (typeof RootError === 'string') {
                 RootError = errorTypes[RootError];
             }
-            if (!UTError.isPrototypeOf(RootError)) {
+            if (!(RootError.prototype instanceof UTError)) {
                 return {}; // maybe throw
             }
         }
-        return Object.keys(errorTypes).reduce((all, type) => {
-            let Err = errorTypes[type];
-            if (Err === RootError || RootError.isPrototypeOf(Err)) {
-                all[type] = Err;
+        let errors = {};
+        errors[RootError.type] = RootError;
+        Object.keys(errorTypes).forEach(type => {
+            if (errorTypes[type].prototype instanceof RootError) {
+                errors[type] = errorTypes[type];
             }
-            return all;
-        }, {});
+        });
+        return errors;
     },
     get: function(type) {
         if (!type) { // TODO: remove check. use fetch for fetching multiple error definitions
