@@ -1,3 +1,13 @@
+<a name="5.6.0"></a>
+# [5.6.0](https://github.com/softwaregroup-bg/ut-error/compare/v5.5.0...v5.6.0) (2018-04-27)
+
+
+### Features
+
+* add fetch method ([7d1279f](https://github.com/softwaregroup-bg/ut-error/commit/7d1279f))
+
+
+
 <a name="5.5.0"></a>
 # [5.5.0](https://github.com/softwaregroup-bg/ut-error/compare/v5.4.9...v5.5.0) (2018-04-17)
 
