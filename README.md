@@ -149,3 +149,29 @@ function f6(){
 }
 
 ```
+## Error fields
+
+A serialized error is represented by the following JSON
+
+```
+{
+    "cause": {
+        "message": "No connection",
+        "type": "port.notConnected",
+        "level": "error"
+    },
+    "message": "Crypto health error",
+    "type": "crypto.health",
+    "level": "error",
+    "method": "crypto.health.check"
+}
+```
+
+| Property | Type  | Required  | Description |
+| :-----:  | :----: | :--: | :-: |
+| cause    | String | no   | In case another error caused this error. This allows for error chaining as the inner error can also have a cause and so on. |
+| message  | String | yes  | Human readable error message |
+| type     | String | yes  | The error's unique identifier. Each error has an unique type. The type can also illustrates the error class hierarchy - in case there is an error which is an instance of class B with type 'b' inheriting class A with type 'a' then the error would have type: 'a.b'  |
+| level    | String | no   | The error serverity level - could be error, fatal, etc. for additional classification |
+| method   | String | no   | in the context of what method had the error been raised  |
+
