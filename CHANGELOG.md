@@ -1,3 +1,13 @@
+<a name="5.6.2"></a>
+## [5.6.2](https://github.com/softwaregroup-bg/ut-error/compare/v5.6.1...v5.6.2) (2018-08-13)
+
+
+### Bug Fixes
+
+* add more info about error fields and their meaning ([8b10c79](https://github.com/softwaregroup-bg/ut-error/commit/8b10c79))
+
+
+
 <a name="5.6.1"></a>
 ## [5.6.1](https://github.com/softwaregroup-bg/ut-error/compare/v5.6.0...v5.6.1) (2018-04-27)
 
