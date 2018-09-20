@@ -1,6 +1,8 @@
-var isProto = Symbol.for('isProto');
-var interpolationRegex = /\{([^}]*)\}/g;
-var nameRegex = /^[a-z][a-zA-Z]*$/;
+const isProto = Symbol.for('isProto');
+const interpolationRegex = /\{([^}]*)\}/g;
+const stringFormatValidator = regex => str => regex.test(str);
+const isCamelCase = stringFormatValidator(/^[a-z][a-zA-Z0-9]*$/);
+const isAlphaNumeric = stringFormatValidator(/^[a-zA-Z0-9]+$/);
 var initialized = false;
 var log;
 
@@ -75,9 +77,11 @@ module.exports = {
     },
     define: function(id, superType, message, level) {
         if (typeof id !== 'string') {
-            deprecationWarning('error identifier must be a string', {id});
-        } else if (!nameRegex.test(id)) {
-            deprecationWarning('error identifier must be alphabetic and start with lowercase', {id});
+            throw new Error(JSON.stringify({
+                message: 'wrong id type',
+                expected: 'string',
+                actual: typeof id
+            }, null, 4));
         }
         if (typeof level === 'object') {
             deprecationWarning('level must be string', {id});
@@ -85,6 +89,9 @@ module.exports = {
         }
         var SuperCtor = UTError;
         if (superType) {
+            if (!isAlphaNumeric(id)) {
+                deprecationWarning('error identifier must comprise alphanumeric characters only', {id});
+            }
             if (typeof message !== 'string') {
                 deprecationWarning('missing error message', {id});
             }
@@ -93,6 +100,8 @@ module.exports = {
             } else if (typeof superType === 'function' && superType.prototype instanceof UTError) {
                 SuperCtor = superType;
             }
+        } else if (!isCamelCase(id)) {
+            deprecationWarning('error identifier must be in camelCase format', {id});
         }
         var type = SuperCtor === UTError ? id : SuperCtor.type + '.' + id;
         if (errorTypes[type]) {
