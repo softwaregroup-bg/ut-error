@@ -119,7 +119,7 @@ module.exports = {
             if (typeof RootError === 'string') {
                 RootError = errorTypes[RootError];
             }
-            if (!(RootError.prototype instanceof UTError)) {
+            if (!RootError || !(RootError.prototype instanceof UTError)) {
                 return {}; // maybe throw
             }
         }
