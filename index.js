@@ -35,7 +35,7 @@ function UTError(x) {
     } else {
         Object.assign(this, x);
     }
-    this.message = interpolate(defaultMessage || x.message || 'Unknown Error', x.params || {});
+    this.message = interpolate(x.message || defaultMessage || 'Unknown Error', x.params || {});
 }
 
 inherit(UTError, Error);
