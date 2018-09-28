@@ -57,7 +57,7 @@ function createErrorConstructor(type, SuperCtor, message, level) {
         } else if (!(this instanceof CustomUTError)) {
             return new CustomUTError(x);
         } else if (typeof x !== 'object') {
-            if (x !== undefined || typeof x !== 'string') deprecationWarning('argument must be an object', {type, args: x, method: 'utError.constructor'});
+            if (x !== undefined && typeof x !== 'string') deprecationWarning('argument must be an object', {type, args: x, method: 'utError.constructor'});
             x = {message: x}; // temporary polyfill
         }
         SuperCtor.call(this, x);
