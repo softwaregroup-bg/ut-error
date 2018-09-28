@@ -8,7 +8,17 @@ var log;
 
 function deprecationWarning(msg, context) {
     var e = new Error();
-    log && log.warn && log.warn(msg, {mtid: 'DEPRECATION', context, stack: e.stack.split('\n').splice(3).join('\n')});
+    log && log.warn && log.warn(msg, {
+        $meta: {
+            mtid: 'deprecation',
+            method: context.method
+        },
+        args: context.args,
+        error: {
+            type: 'utError.deprecation',
+            stack: e.stack.split('\n').splice(3).join('\n')
+        }
+    });
 }
 
 function inherit(Ctor, SuperCtor) {
@@ -47,7 +57,7 @@ function createErrorConstructor(type, SuperCtor, message, level) {
         } else if (!(this instanceof CustomUTError)) {
             return new CustomUTError(x);
         } else if (typeof x !== 'object') {
-            deprecationWarning('argument must be an object', {argument: x, type});
+            deprecationWarning('argument must be an object', {type, args: x, method: 'utError.constructor'});
             x = {message: x}; // temporary polyfill
         }
         SuperCtor.call(this, x);
@@ -62,9 +72,8 @@ function createErrorConstructor(type, SuperCtor, message, level) {
 }
 
 var errorTypes = {
-    typeExists: createErrorConstructor('typeExists', UTError, 'Error {id} is already defined! Type: {type}', 'error'),
-    unknownType: createErrorConstructor('unknownType', UTError, 'Unknown error type: {type}', 'error')
 };
+
 module.exports = {
     init: function(bus) {
         if (initialized) {
@@ -84,16 +93,16 @@ module.exports = {
             }, null, 4));
         }
         if (typeof level === 'object') {
-            deprecationWarning('level must be string', {id});
+            deprecationWarning('level must be string', {args: {id}, method: 'utError.define'});
             level = level.level;
         }
         var SuperCtor = UTError;
         if (superType) {
             if (!isAlphaNumeric(id)) {
-                deprecationWarning('error identifier must comprise alphanumeric characters only', {id});
+                deprecationWarning('error identifier must comprise alphanumeric characters only', {args: {id}, method: 'utError.define'});
             }
             if (typeof message !== 'string') {
-                deprecationWarning('missing error message', {id});
+                deprecationWarning('missing error message', {args: {id}, method: 'utError.define'});
             }
             if (typeof superType === 'string' && errorTypes[superType]) {
                 SuperCtor = errorTypes[superType];
@@ -101,12 +110,11 @@ module.exports = {
                 SuperCtor = superType;
             }
         } else if (!isCamelCase(id)) {
-            deprecationWarning('error identifier must be in camelCase format', {id});
+            deprecationWarning('error identifier must be in camelCase format', {args: {id}, method: 'utError.define'});
         }
         var type = SuperCtor === UTError ? id : SuperCtor.type + '.' + id;
         if (errorTypes[type]) {
-            let error = errorTypes.typeExists({params: {id, type}});
-            deprecationWarning(error.message);
+            deprecationWarning(`Error ${id} is already defined! Type: ${type}`, {args: {id: type}, method: 'utError.define'});
             // throw error;
         }
         errorTypes[type] = createErrorConstructor(type, SuperCtor, message, level);
