@@ -1,6 +1,9 @@
 # UT Error
 
-ut-error is a module that should be used for generating errors everywhere within the ut-bus framework and all implementations based upon it. This is a module that offers functionalities for better error handling in the background and gives possibilities for dynamic error classes declaration and hierarchical chaining.
+ut-error is a module that should be used for generating errors everywhere within
+the ut-bus framework and all implementations based upon it. This is a module
+that offers functionalities for better error handling in the background and
+gives possibilities for dynamic error classes declaration and hierarchical chaining.
 
 ut-error should be used mainly through its 'define' method. For example:
 
@@ -15,7 +18,8 @@ var ErrorType3 = utError.define('ErrorType3', errorType2);
 
 ```
 
-The define method will create a new error type or will just return it if it was previously defined. It will also build the hierarchy between the error classes automatically.
+The define method will create a new error type or will just return it if it was
+previously defined. It will also build the hierarchy between the error classes automatically.
 After defining the error types, the errors themselves can be instantiated as follows:
 
 ```js
@@ -26,7 +30,8 @@ var e2 = ErrorType1('e2 message');
 var e3 = ErrorType1('e3 message');
 ```
 
-The errors are actually real 'Error' objects but additionally the following inheritance is achieved:
+The errors are actually real 'Error' objects but additionally the following
+inheritance is achieved:
 
 ```js
 console.log(e1 instnaceof Error) // -> true
@@ -53,7 +58,9 @@ console.log(e3.type) // -> 'ErrorType1.ErrorType2.ErrorType3'
 The 'define' method accepts 2 arguments: `name` and `superType`, where:
 
 - `name` (required) is a string, specifying the name of the error class ()
-- `superType` (optional - if inheritance is desired) is a function (i.e an already defined errorType class) or a string, representing the type of an already defined errorType class.
+- `superType` (optional - if inheritance is desired) is a function
+  (i.e an already defined errorType class) or a string, representing the type
+  of an already defined errorType class.
 
 superType can accept either a function or a string, which means that:
 
@@ -73,7 +80,9 @@ var ErrorType3 = utError.define('ErrorType3', 'ErrorType1.ErrorType2');
 */
 ```
 
-The error constructors that get generated accept only 1 argument but that argument is actually very flexible: it can be undefined, string, object or even a real javascript exception.
+The error constructors that get generated accept only 1 argument but that
+argument is actually very flexible: it can be undefined, string, object or even
+a real javascript exception.
 
 So errors can be generated either way:
 
@@ -147,13 +156,13 @@ function f5(){
 function f6(){
     return Promise.reject(errors.errorC());
 }
-
 ```
+
 ## Error fields
 
 A serialized error is represented by the following JSON
 
-```
+```json
 {
     "cause": {
         "message": "No connection",
@@ -174,4 +183,3 @@ A serialized error is represented by the following JSON
 | type     | String | yes  | The error's unique identifier. Each error has an unique type. The type can also illustrates the error class hierarchy - in case there is an error which is an instance of class B with type 'b' inheriting class A with type 'a' then the error would have type: 'a.b'  |
 | level    | String | no   | The error serverity level - could be error, fatal, etc. for additional classification |
 | method   | String | no   | in the context of what method had the error been raised  |
-
