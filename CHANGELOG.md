@@ -1,3 +1,19 @@
+# [5.7.0](https://github.com/softwaregroup-bg/ut-error/compare/v5.6.2...v5.7.0) (2019-02-02)
+
+
+### Bug Fixes
+
+* allow undefined or string ([03cc044](https://github.com/softwaregroup-bg/ut-error/commit/03cc044))
+* check camelCase only for error classes which have no super classes ([c9b4d13](https://github.com/softwaregroup-bg/ut-error/commit/c9b4d13))
+* improve logging of warnings ([9f7027c](https://github.com/softwaregroup-bg/ut-error/commit/9f7027c))
+* logging of warnings ([f045198](https://github.com/softwaregroup-bg/ut-error/commit/f045198))
+* prioritize custom error message ([#15](https://github.com/softwaregroup-bg/ut-error/issues/15)) ([4c4d24b](https://github.com/softwaregroup-bg/ut-error/commit/4c4d24b))
+* prototype of undefined ([#14](https://github.com/softwaregroup-bg/ut-error/issues/14)) ([a254165](https://github.com/softwaregroup-bg/ut-error/commit/a254165))
+* upgrade dependencies ([2ae4d24](https://github.com/softwaregroup-bg/ut-error/commit/2ae4d24))
+* upgrade ut-tools ([c5a5851](https://github.com/softwaregroup-bg/ut-error/commit/c5a5851))
+
+
+
 <a name="5.6.2"></a>
 ## [5.6.2](https://github.com/softwaregroup-bg/ut-error/compare/v5.6.1...v5.6.2) (2018-08-13)
 

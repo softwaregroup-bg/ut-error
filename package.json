@@ -1,6 +1,6 @@
 {
   "name": "ut-error",
-  "version": "5.7.0-rc-godfather.3",
+  "version": "5.7.0",
   "dependencies": {},
   "devDependencies": {
     "ut-tools": "^6.8.10"
