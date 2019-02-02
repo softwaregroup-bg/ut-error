@@ -3,7 +3,7 @@
   "version": "5.7.0-rc-godfather.3",
   "dependencies": {},
   "devDependencies": {
-    "ut-tools": "^6.3.3"
+    "ut-tools": "^6.8.10"
   },
   "description": "UT error module",
   "scripts": {
