@@ -1,6 +1,6 @@
 {
   "name": "ut-error",
-  "version": "5.7.1",
+  "version": "5.7.2",
   "dependencies": {},
   "devDependencies": {
     "tap": "^12.7.0",
