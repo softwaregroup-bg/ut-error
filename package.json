@@ -3,7 +3,7 @@
   "version": "5.7.1",
   "dependencies": {},
   "devDependencies": {
-    "tap": "^12.6.0",
+    "tap": "^13.1.1",
     "ut-tools": "^6.8.10"
   },
   "description": "UT error module",
